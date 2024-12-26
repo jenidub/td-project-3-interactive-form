@@ -107,11 +107,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form Validation
     const form = document.querySelector("form")
     form.addEventListener("submit", (e) => {
-        e.preventDefault()
-
         // The "Name" field cannot be blank or empty.
-        const nonBlankCheck = /\S+/
-        if (!nonBlankCheck.test(nameField.value)) {
+        const nameCheck = /\S+/
+        if (!nameCheck.test(nameField.value)) {
             console.log("this is blank!")
             e.preventDefault()
         } else {
@@ -121,7 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // The "Email Address" field must contain a correctly formatted email address
         let emailField = document.querySelector("#email")
         const emailCheck = /^\w+@\w+\.[a-z]{3,4}$/
-        console.log(emailCheck.test(emailField.value))
         if (!emailCheck.test(emailField.value)) {
             console.log("this is not formatted correctly - try again!")
             e.preventDefault()
@@ -140,12 +137,34 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        if (!oneSelected) {
-            console.log("There are no activities selected. Please select at least one")
-            e.preventDefault()
-        } else {
-            console.log("valid activities section")
-        }
+        !oneSelected ? e.preventDefault() : console.log("valid activities section")
         
+        // CC SELECTION VALIDATIONS
+        if (ccDiv.hidden === false) {
+            //CC Section Validator Function
+            const ccSectionValidator = (regex, entry) => {
+                if (!regex.test(entry)) {
+                    e.preventDefault()
+                    console.log("Invalid entry - please check")
+                } else {
+                    console.log("Valid entry")
+                }
+            }
+
+            // [1] CC Number Validation
+            const ccnValidate = /^\d{13,16}$/
+            let ccnEntry = document.querySelector("#cc-num").value
+            ccSectionValidator(ccnValidate, ccnEntry)
+            
+            // [2] CC Zip Code Validation
+            const zipValidate = /^\d{5}$/
+            let zipEntry = document.querySelector("#zip").value
+            ccSectionValidator(zipValidate, zipEntry)
+
+            // [3] CC CVV Validation
+            const cvvValidate = /^\d{3}$/
+            let cvvEntry = document.querySelector("#cvv").value
+            ccSectionValidator(cvvValidate, cvvEntry)
+        }
     })
 })
