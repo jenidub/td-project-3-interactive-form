@@ -1,10 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    //Step 1: When the page first loads, the first text field should have the 
+    // On Page Load
+    // When the page first loads, the first text field should have the 
     // focus state by default to prompt the user.
     const nameField = document.querySelector("label[for=name] input")
     nameField.focus()
 
-    //Step 2: If the user selects "Other" in the "Job Role" drop-down menu,
+    // Job Role Section
+    // If the user selects "Other" in the "Job Role" drop-down menu,
     // they can enter info into the "Other job role" text field. This field 
     // should be hidden by default and only be displayed if "Other" is selected 
     // in the drop-down menu.
@@ -18,7 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
 
-    // Step 3: The options in the "Color" drop-down menu are not available 
+    // T-Shirt Section
+    // The options in the "Color" drop-down menu are not available 
     // for each t-shirt design, so the user shouldn’t be able to see or 
     // choose a color option until they have chosen a design.
     const colorDropdown = document.querySelector("select[id=color]")
@@ -44,5 +47,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 optionList[i].disabled = true
             }
         }
+    })
+
+    // Activities Section
+    // The "Total: $" paragraph below the "Register for Activities" section
+    // should update to reflect the total cost of all the selected activities.
+    const activitiesFields = document.querySelector("#activities")
+    let totalField = document.querySelector("#total-amount")
+    let total = parseFloat(totalField.textContent)
+    console.log("initial total: ", total)
+
+    activitiesFields.addEventListener("change", (e) => {
+        let checkedElement = e.target
+        let amount = parseFloat(checkedElement.dataset.cost)
+        checkedElement.checked ? total += amount : total -= amount
+        totalField.textContent = `${total}`
     })
 })
