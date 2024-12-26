@@ -17,4 +17,32 @@ document.addEventListener('DOMContentLoaded', () => {
             jobDropdown.nextElementSibling.style.display = "none"
         }
     })
+
+    // Step 3: The options in the "Color" drop-down menu are not available 
+    // for each t-shirt design, so the user shouldn’t be able to see or 
+    // choose a color option until they have chosen a design.
+    const colorDropdown = document.querySelector("select[id=color]")
+    colorDropdown.disabled = true
+
+    const designDropdown = document.querySelector("select[id=design]")
+    designDropdown.addEventListener("change", (e) => {
+        colorDropdown.disabled = false
+        let userOption = e.target.value
+        let optionList = colorDropdown.querySelectorAll("option")
+        let firstMatch
+        for (let i = 0; i < optionList.length; i++) {
+            style = optionList[i].dataset.theme
+            if (style === userOption) {
+                optionList[i].hidden = false
+                optionList[i].disabled = false
+                if (!firstMatch) {
+                    firstMatch = optionList[i]
+                    optionList[i].selected = true
+                }
+            } else {
+                optionList[i].hidden = true
+                optionList[i].disabled = true
+            }
+        }
+    })
 })
