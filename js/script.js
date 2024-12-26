@@ -52,16 +52,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // Activities Section
     // The "Total: $" paragraph below the "Register for Activities" section
     // should update to reflect the total cost of all the selected activities.
-    const activitiesFields = document.querySelector("#activities")
+    const activityFields = document.querySelector("#activities")
     let totalField = document.querySelector("#total-amount")
     let total = parseFloat(totalField.textContent)
 
-    activitiesFields.addEventListener("change", (e) => {
+    activityFields.addEventListener("change", (e) => {
         let checkedElement = e.target
         let amount = parseFloat(checkedElement.dataset.cost)
         checkedElement.checked ? total += amount : total -= amount
         totalField.textContent = `${total}`
     })
+
+    //Add Accessibility Features to Activities Section
+    //When the checkboxes in the "Register for Activities" section are in focus, 
+    // there’s little to no indication. So to improve accessibility, 
+    // the checkboxes’ parent label elements should receive additional 
+    // styles when their respective checkboxes are in focus.
+    const activityInputs = document.querySelectorAll("input[type=checkbox")
+    for (let i = 0; i < activityInputs.length; i++) {
+        currentElement = activityInputs[i]
+        currentElement.addEventListener("focus", (e) => {
+            e.target.parentNode.classList.add("focus")
+        })
+        currentElement.addEventListener("blur", (e) => {
+            console.log(e.target.parentNode.classList)
+            e.target.parentNode.classList.remove("focus")
+        })
+    }
 
     // Payment Info Section
     // The credit card payment option should be selected for the user by default. 
@@ -167,4 +184,6 @@ document.addEventListener('DOMContentLoaded', () => {
             ccSectionValidator(cvvValidate, cvvEntry)
         }
     })
+
+
 })
