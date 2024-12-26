@@ -90,12 +90,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 ccDiv.hidden = true
                 paypalDiv.hidden = false
                 bitcoinDiv.hidden = true
-                break;
+                break
             case 'bitcoin':
                 ccDiv.hidden = true
                 paypalDiv.hidden = true
                 bitcoinDiv.hidden = false
-                break;
+                break
             default:
                 ccDiv.hidden = false
                 paypalDiv.hidden = true
@@ -104,4 +104,48 @@ document.addEventListener('DOMContentLoaded', () => {
             
     })
 
+    // Form Validation
+    const form = document.querySelector("form")
+    form.addEventListener("submit", (e) => {
+        e.preventDefault()
+
+        // The "Name" field cannot be blank or empty.
+        const nonBlankCheck = /\S+/
+        if (!nonBlankCheck.test(nameField.value)) {
+            console.log("this is blank!")
+            e.preventDefault()
+        } else {
+            console.log("valid name")
+        }
+
+        // The "Email Address" field must contain a correctly formatted email address
+        let emailField = document.querySelector("#email")
+        const emailCheck = /^\w+@\w+\.[a-z]{3,4}$/
+        console.log(emailCheck.test(emailField.value))
+        if (!emailCheck.test(emailField.value)) {
+            console.log("this is not formatted correctly - try again!")
+            e.preventDefault()
+        } else {
+            console.log("valid email")
+        }
+
+        // The "Register for Activities" section must have at least one activity selected.
+        const selectedActivities = activitiesFields.querySelectorAll("input")
+        let oneSelected = false
+
+        for (let i = 0; i < selectedActivities.length; i++) {
+            if (selectedActivities[i].checked === true) {
+                oneSelected = true
+                break
+            }
+        }
+
+        if (!oneSelected) {
+            console.log("There are no activities selected. Please select at least one")
+            e.preventDefault()
+        } else {
+            console.log("valid activities section")
+        }
+        
+    })
 })
