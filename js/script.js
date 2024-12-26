@@ -11,12 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // should be hidden by default and only be displayed if "Other" is selected 
     // in the drop-down menu.
     const jobDropdown = document.querySelector("select[name=user-title]")
-    jobDropdown.nextElementSibling.style.display = "none"
+    jobDropdown.nextElementSibling.hidden = true
     jobDropdown.addEventListener("change", (e) => {
         if (e.target.value === 'other') {
-            jobDropdown.nextElementSibling.style.display = "block"
+            jobDropdown.nextElementSibling.hidden = false
         } else {
-            jobDropdown.nextElementSibling.style.display = "none"
+            jobDropdown.nextElementSibling.hidden = true
         }
     })
 
@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const activitiesFields = document.querySelector("#activities")
     let totalField = document.querySelector("#total-amount")
     let total = parseFloat(totalField.textContent)
-    console.log("initial total: ", total)
 
     activitiesFields.addEventListener("change", (e) => {
         let checkedElement = e.target
@@ -63,4 +62,46 @@ document.addEventListener('DOMContentLoaded', () => {
         checkedElement.checked ? total += amount : total -= amount
         totalField.textContent = `${total}`
     })
+
+    // Payment Info Section
+    // The credit card payment option should be selected for the user by default. 
+    // So upon page load "Credit Card" should be the selected option of the 
+    // select element, and the credit card payment section should be the only payment 
+    // section displayed on the page. When the user selects a different payment option 
+    // from the drop-down menu, the form should update to display only the chosen 
+    // payment method section.
+    const paymentDropdown = document.querySelector("#payment")
+    const ccDiv = document.querySelector("#credit-card")
+    const paypalDiv = document.querySelector("#paypal")
+    const bitcoinDiv = document.querySelector("#bitcoin")
+
+    // Initial state of payment section
+    let paymentOptions = paymentDropdown.querySelectorAll("option")
+    paymentOptions[1].selected = true
+    ccDiv.hidden = false
+    paypalDiv.hidden = true
+    bitcoinDiv.hidden = true
+
+    // Update display based on user selection
+    paymentDropdown.addEventListener("change", (e) => {
+        selectedPayment = e.target.value
+        switch (selectedPayment) {
+            case 'paypal':
+                ccDiv.hidden = true
+                paypalDiv.hidden = false
+                bitcoinDiv.hidden = true
+                break;
+            case 'bitcoin':
+                ccDiv.hidden = true
+                paypalDiv.hidden = true
+                bitcoinDiv.hidden = false
+                break;
+            default:
+                ccDiv.hidden = false
+                paypalDiv.hidden = true
+                bitcoinDiv.hidden = true
+        }
+            
+    })
+
 })
