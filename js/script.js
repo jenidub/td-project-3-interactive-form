@@ -52,14 +52,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Activities Section
     // The "Total: $" paragraph below the "Register for Activities" section
     // should update to reflect the total cost of all the selected activities.
-    const activityFields = document.querySelector("#activities")
+    const activityFieldset = document.querySelector("#activities")
+    const activityInputs = document.querySelectorAll("input[type=checkbox")
     let totalField = document.querySelector("#total-amount")
     let total = parseFloat(totalField.textContent)
 
-    activityFields.addEventListener("change", (e) => {
-        let checkedElement = e.target
-        let amount = parseFloat(checkedElement.dataset.cost)
-        checkedElement.checked ? total += amount : total -= amount
+    activityFieldset.addEventListener("change", (e) => {
+        let currentElement = e.target
+        let amount = parseFloat(currentElement.dataset.cost)
+        currentElement.checked ? total += amount : total -= amount
         totalField.textContent = `${total}`
     })
 
@@ -68,14 +69,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // there’s little to no indication. So to improve accessibility, 
     // the checkboxes’ parent label elements should receive additional 
     // styles when their respective checkboxes are in focus.
-    const activityInputs = document.querySelectorAll("input[type=checkbox")
     for (let i = 0; i < activityInputs.length; i++) {
         currentElement = activityInputs[i]
         currentElement.addEventListener("focus", (e) => {
             e.target.parentNode.classList.add("focus")
         })
         currentElement.addEventListener("blur", (e) => {
-            console.log(e.target.parentNode.classList)
             e.target.parentNode.classList.remove("focus")
         })
     }
@@ -124,66 +123,72 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form Validation
     const form = document.querySelector("form")
     form.addEventListener("submit", (e) => {
+        //Function for show/hide hints and class application
+        const formFieldValidator = (valid, field, hint) => {
+            if (!valid) {
+                field.parentNode.classList.add("not-valid")
+                field.parentNode.classList.remove("valid")
+                hint.style.display = "block"
+                e.preventDefault()
+            } else {
+                field.parentNode.classList.add("valid")
+                field.parentNode.classList.remove("not-valid")
+                hint.style.display = "none"
+            }
+        }
+
         // The "Name" field cannot be blank or empty.
         const nameCheck = /\S+/
-        if (!nameCheck.test(nameField.value)) {
-            console.log("this is blank!")
-            e.preventDefault()
-        } else {
-            console.log("valid name")
-        }
+        const nameHint = document.querySelector("#name-hint")
+        let nameValue = nameField.value
+        let nameValid = nameCheck.test(nameValue)
+        formFieldValidator(nameValid, nameField, nameHint)
 
         // The "Email Address" field must contain a correctly formatted email address
-        let emailField = document.querySelector("#email")
         const emailCheck = /^\w+@\w+\.[a-z]{3,4}$/
-        if (!emailCheck.test(emailField.value)) {
-            console.log("this is not formatted correctly - try again!")
-            e.preventDefault()
-        } else {
-            console.log("valid email")
-        }
+        const emailHint = document.querySelector("#email-hint")
+        const emailField = document.querySelector("#email")
+        let emailValue = emailField.value
+        let emailValid = emailCheck.test(emailValue)
+        formFieldValidator(emailValid, emailField, emailHint)
 
-        // The "Register for Activities" section must have at least one activity selected.
-        const selectedActivities = activitiesFields.querySelectorAll("input")
-        let oneSelected = false
-
-        for (let i = 0; i < selectedActivities.length; i++) {
-            if (selectedActivities[i].checked === true) {
-                oneSelected = true
-                break
-            }
-        }
-
-        !oneSelected ? e.preventDefault() : console.log("valid activities section")
-        
         // CC SELECTION VALIDATIONS
         if (ccDiv.hidden === false) {
-            //CC Section Validator Function
-            const ccSectionValidator = (regex, entry) => {
-                if (!regex.test(entry)) {
-                    e.preventDefault()
-                    console.log("Invalid entry - please check")
-                } else {
-                    console.log("Valid entry")
-                }
-            }
-
             // [1] CC Number Validation
             const ccnValidate = /^\d{13,16}$/
-            let ccnEntry = document.querySelector("#cc-num").value
-            ccSectionValidator(ccnValidate, ccnEntry)
+            const ccnField = document.querySelector("#cc-num")
+            const ccnHint = document.querySelector("#cc-hint")
+            let ccnEntry = ccnField.value
+            let ccnValid = ccnValidate.test(ccnEntry)
+            formFieldValidator(ccnValid, ccnField, ccnHint)
             
             // [2] CC Zip Code Validation
             const zipValidate = /^\d{5}$/
-            let zipEntry = document.querySelector("#zip").value
-            ccSectionValidator(zipValidate, zipEntry)
+            const zipField = document.querySelector("#zip")
+            const zipHint = document.querySelector("#zip-hint")
+            let zipEntry = zipField.value
+            let zipValid = zipValidate.test(zipEntry)
+            formFieldValidator(zipValid, zipField, zipHint)
 
             // [3] CC CVV Validation
             const cvvValidate = /^\d{3}$/
-            let cvvEntry = document.querySelector("#cvv").value
-            ccSectionValidator(cvvValidate, cvvEntry)
+            const cvvField = document.querySelector("#cvv")
+            const cvvHint = document.querySelector("#cvv-hint")
+            let cvvEntry = cvvField.value
+            let cvvValid = cvvValidate.test(cvvEntry)
+            formFieldValidator(cvvValid, cvvField, cvvHint)
         }
+
+        // The "Register for Activities" section must have at least one activity selected.
+        const activityField = document.querySelector("#activities-box")
+        const activityHint = document.querySelector("#activities-hint")
+        let activityValid = false
+        for (let i = 0; i < activityInputs.length; i++) {
+            if (activityInputs[i].checked === true) {
+                activityValid = true
+                break
+            }
+        }
+        formFieldValidator(activityValid, activityField, activityHint)
     })
-
-
 })
