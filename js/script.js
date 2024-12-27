@@ -1,15 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // On Page Load
-    // When the page first loads, the first text field should have the 
+    // ON PAGE LOAD
+    // - When the page first loads, the first text field should have the 
     // focus state by default to prompt the user.
     const nameField = document.querySelector("label[for=name] input")
     nameField.focus()
 
-    // Job Role Section
-    // If the user selects "Other" in the "Job Role" drop-down menu,
-    // they can enter info into the "Other job role" text field. This field 
-    // should be hidden by default and only be displayed if "Other" is selected 
-    // in the drop-down menu.
+    // JOB ROLE SELECTION
+    // - The Other text box hidden at page load
+    // - If 'Other' is selected, the text box will appear
     const jobDropdown = document.querySelector("select[name=user-title]")
     jobDropdown.nextElementSibling.hidden = true
     jobDropdown.addEventListener("change", (e) => {
@@ -20,10 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
 
-    // T-Shirt Section
-    // The options in the "Color" drop-down menu are not available 
-    // for each t-shirt design, so the user shouldn’t be able to see or 
-    // choose a color option until they have chosen a design.
+    // T-SHIRT INFO SECTION
+    // - On page load, the option 'Select Theme' is showing
+    // - Toggle between the shirt list based on the user selection in the Design dropdown
+    // - Hide the other shirt options once the design is selected
     const colorDropdown = document.querySelector("select[id=color]")
     colorDropdown.disabled = true
 
@@ -49,9 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
 
-    // Activities Section
-    // The "Total: $" paragraph below the "Register for Activities" section
-    // should update to reflect the total cost of all the selected activities.
+    // REGISTER FOR ACTIVITIES SECTION
+    // As the user selects activities, the total in the <span id="total-amount"> will update (+/-)
     const activityFieldset = document.querySelector("#activities")
     const activityInputs = document.querySelectorAll("input[type=checkbox")
     let totalField = document.querySelector("#total-amount")
@@ -64,11 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
         totalField.textContent = `${total}`
     })
 
-    //Add Accessibility Features to Activities Section
-    //When the checkboxes in the "Register for Activities" section are in focus, 
-    // there’s little to no indication. So to improve accessibility, 
-    // the checkboxes’ parent label elements should receive additional 
-    // styles when their respective checkboxes are in focus.
+    // Add/remove "focus" class styling to the respective activity
+    // are in focus to improve accessibility for the website
     for (let i = 0; i < activityInputs.length; i++) {
         currentElement = activityInputs[i]
         currentElement.addEventListener("focus", (e) => {
@@ -79,13 +73,11 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
-    // Payment Info Section
-    // The credit card payment option should be selected for the user by default. 
-    // So upon page load "Credit Card" should be the selected option of the 
-    // select element, and the credit card payment section should be the only payment 
-    // section displayed on the page. When the user selects a different payment option 
-    // from the drop-down menu, the form should update to display only the chosen 
-    // payment method section.
+    // PAYMENT INFO SECTION
+    // - On page load, show the CC option as the default / preferred option
+    // with associated text boxes
+    // - Update the displayed <div> based on the user selection in the 
+    // "I'm going to pay with:" dropdown menu
     const paymentDropdown = document.querySelector("#payment")
     const ccDiv = document.querySelector("#credit-card")
     const paypalDiv = document.querySelector("#paypal")
@@ -120,10 +112,12 @@ document.addEventListener('DOMContentLoaded', () => {
             
     })
 
-    // Form Validation
+    // FORM VALIDATION ON SUBMIT
+    // Set up form validation for the required sections and fields
+    // that have specific format requirements when the submit button is clicked
     const form = document.querySelector("form")
     form.addEventListener("submit", (e) => {
-        //Function for show/hide hints and class application
+        // Helper function to handle the form field validation styling
         const formFieldValidator = (valid, field, hint) => {
             if (!valid) {
                 field.parentNode.classList.add("not-valid")
@@ -137,13 +131,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // The "Name" field cannot be blank or empty.
+        // NAME FIELD
+        // The "Name" field cannot be blank or empty
         const nameCheck = /\S+/
         const nameHint = document.querySelector("#name-hint")
         let nameValue = nameField.value
         let nameValid = nameCheck.test(nameValue)
         formFieldValidator(nameValid, nameField, nameHint)
 
+        // EMAIL ADDRESS FIELD
         // The "Email Address" field must contain a correctly formatted email address
         const emailCheck = /^\w+@\w+\.[a-z]{3,4}$/
         const emailHint = document.querySelector("#email-hint")
@@ -152,9 +148,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let emailValid = emailCheck.test(emailValue)
         formFieldValidator(emailValid, emailField, emailHint)
 
-        // CC SELECTION VALIDATIONS
+        // CC PAYMENT OPTION FIELDS
+        // Validate the info in the credit card number, zip code, and CVV number fields
         if (ccDiv.hidden === false) {
             // [1] CC Number Validation
+            // The CC number must be between 13-16 digits between 0-9
             const ccnValidate = /^\d{13,16}$/
             const ccnField = document.querySelector("#cc-num")
             const ccnHint = document.querySelector("#cc-hint")
@@ -163,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formFieldValidator(ccnValid, ccnField, ccnHint)
             
             // [2] CC Zip Code Validation
+            // The zip code must be 5 digits between 0-9
             const zipValidate = /^\d{5}$/
             const zipField = document.querySelector("#zip")
             const zipHint = document.querySelector("#zip-hint")
@@ -171,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formFieldValidator(zipValid, zipField, zipHint)
 
             // [3] CC CVV Validation
+            // The CC CVV number must be 3 digits between 0-9
             const cvvValidate = /^\d{3}$/
             const cvvField = document.querySelector("#cvv")
             const cvvHint = document.querySelector("#cvv-hint")
@@ -179,6 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formFieldValidator(cvvValid, cvvField, cvvHint)
         }
 
+        // REGISTER FOR ACTIVITIES FIELDSET
         // The "Register for Activities" section must have at least one activity selected.
         const activityField = document.querySelector("#activities-box")
         const activityHint = document.querySelector("#activities-hint")
@@ -189,6 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break
             }
         }
+        
         formFieldValidator(activityValid, activityField, activityHint)
     })
 })
